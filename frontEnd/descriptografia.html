@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lockey</title>
+  <link rel="stylesheet" href="style-cripto.css">
+</head>
+<body>
+
+  <div class="header">
+    <h1>&lt;LocKey&gt;</h1>
+  </div>
+
+  <div class="container">
+    <div class="top-container">
+      
+      <textarea id="inputText" placeholder="Digite seu texto aqui"></textarea>
+
+      <textarea id="outputText" placeholder="Resultado" readonly></textarea>
+    </div>
+
+    <div class="bottom-container">
+      <div class="key-container">
+        <label for="keyInput">Chave Atual</label>
+        <input type="text" id="keyInput" placeholder="Mudar a Chave" value="">
+      </div>
+
+
+      <button id="decryptButton" onclick="decryptInputText()">Descriptografar</button>
+
+      <button id="changeKeyBtn" onclick="updateKey()">Alterar Chave</button>
+    </div>
+
+    <button id="backButton" onclick="window.location.href='index.html';">&#8592; </button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

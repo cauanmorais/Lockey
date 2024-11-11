@@ -1,0 +1,152 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #000000;
+  color: #00ff00;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to top, rgba(102, 255, 0, 0.151), transparent 60%);
+  background-color: #121212;
+  justify-content: flex-start;
+  font-size: 1.5em;
+  overflow: hidden; /* Impede a rolagem */
+}
+
+.container {
+  background-color: #11111185;
+  border-radius: 30px;
+  width: 100%;
+  height: calc(100vh - 60px); 
+  padding: 20px;
+  text-align: center;
+  margin-top: 70px; /* Espaço para o header */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  z-index: 1000;
+  border-bottom: 2px solid #00ff00;
+}
+
+h1 {
+  font-size: 1.5em;
+  color: #00ff00;
+  margin-left: 20px;
+}
+
+.top-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 50%;
+}
+
+textarea {
+  width: 45%;
+  height: 100%;
+  background-color: #3b3b3b;
+  color: #00ff00;
+  border: 2px solid #00ff00;
+  border-radius: 20px;
+  padding: 10px;
+  resize: none;
+  font-size: 1em;
+  line-height: 1.5;
+}
+
+.middle-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 20%;
+}
+
+button {
+  background-color: #00ff00;
+  color: #2f2f2f;
+  border: none;
+  padding: 10px;
+  width: 40%;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+button:hover {
+  background-color: #00cc00;
+}
+
+button:active {
+  background-color: #00b300;
+}
+
+input[type="text"] {
+  padding: 10px;
+  margin: 5px;
+  border: 2px solid #00ff00;
+  border-radius: 20px;
+  background-color: #3b3b3b;
+  color: #00ff00;
+  font-size: 1em;
+  width: 60%;
+  text-align: center;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #00cc00;
+}
+
+.key-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.key-container label {
+  display: block;
+  margin-bottom: 5px;
+  color: #00ff00;
+}
+
+#backButton {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 15px;
+  background-color: #00ff00;
+  color: #2f2f2f;
+  font-size: 1.5em;
+  text-align: center;
+  cursor: pointer;
+}
+
+#backButton:hover {
+  background-color: #00cc00;
+}

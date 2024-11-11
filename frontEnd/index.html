@@ -1,0 +1,42 @@
+<!DOCTYPE html> 
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lockey</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="keyModal" class="modal">
+  <div class="modal-content">
+    <h2>Digite a Chave</h2>
+    <input type="text" id="keyInput" placeholder="Digite sua chave" required>
+    <p id="keyError" class="error-message"></p>
+    <button id="saveKeyBtn">Validar Chave</button>
+  </div>
+</div>
+
+<div class="header">
+  <h1>&lt;LocKey&gt;</h1>
+</div>
+
+<div id="choiceContainer" class="hidden">
+  <div class="container left-container">
+    <div class="content">
+      <h3>Descriptografe com a cifra de Vigenère</h3>
+      <button id="decryptBtn" onclick="window.location.href='descriptografia.html'">Descriptografar</button>
+    </div>
+  </div>
+
+  <div class="container right-container">
+    <div class="content">
+      <h3>Criptografe com a cifra de Vigenère</h3>
+      <button id="encryptBtn" onclick="window.location.href='criptografia.html'">Criptografar</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
