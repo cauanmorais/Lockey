@@ -35,7 +35,7 @@ function validateKey(keyInput) {
 function openModal() {
     const modal = document.getElementById("keyModal");
     if (modal) {
-        modal.style.display = "block";  // Exibe o modal
+        modal.style.display = "block";  
     } else {
         console.error("Modal 'keyModal' não encontrado.");
     }
@@ -45,7 +45,7 @@ function openModal() {
 function closeModal() {
     const modal = document.getElementById("keyModal");
     if (modal) {
-        modal.style.display = "none";  // Esconde o modal
+        modal.style.display = "none";  
     } else {
         console.error("Modal 'keyModal' não encontrado.");
     }
@@ -159,8 +159,8 @@ function updateKey() {
     if (newKey) {
         validateKey(newKey)
             .then(() => {
-                document.getElementById("keyInput").value = key; // Atualiza a chave no campo
-                closeModal();  // Fecha o modal após a chave ser validada
+                document.getElementById("keyInput").value = key; 
+                closeModal();  
             })
             .catch(error => {
                 alert(error);
@@ -173,8 +173,8 @@ function updateKey() {
 // Função para verificar se o Enter foi pressionado
 function handleEnterPress(event, callback) {
     if (event.key === "Enter") {
-        event.preventDefault(); // Evita o comportamento padrão de adicionar uma nova linha (no caso do textarea)
-        callback(); // Chama a função fornecida
+        event.preventDefault(); 
+        callback(); 
     }
 }
 
@@ -220,9 +220,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!key) {
         openModal();  
     } else {
-        document.getElementById("keyInput").value = key; // Exibe a chave atual
+        document.getElementById("keyInput").value = key; 
     }
 
-    // Ativa a função de "Enter" para submissão
+    
     enableEnterToSubmit();
 });

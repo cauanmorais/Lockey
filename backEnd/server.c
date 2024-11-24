@@ -15,8 +15,8 @@ struct session {
 };
 
 // Configurações do servidor
-static const char *s_http_port = "8080"; // Porta do servidor
-static struct mg_http_serve_opts s_http_server_opts; // Corrigido para mg_http_serve_opts
+static const char *s_http_port = "8080"; 
+static struct mg_http_serve_opts s_http_server_opts; 
 
 // Funções de criptografia e descriptografia
 void criptografar(char *textoOriginal, char *chave, char *textoCifrado) {
@@ -43,19 +43,19 @@ void criptografar(char *textoOriginal, char *chave, char *textoCifrado) {
 void descriptografar(char *textoCifrado, char *chave, char *textoOriginal) {
     int tamTexto = strlen(textoCifrado);
     int tamChave = strlen(chave);
-    int indiceChave = 0; // Índice para avançar na chave
+    int indiceChave = 0; 
 
     for (int i = 0; i < tamTexto; i++) {
-        if (isalpha(textoCifrado[i])) { // Apenas caracteres alfabéticos usam a chave
+        if (isalpha(textoCifrado[i])) { 
             char chaveAtual = tolower(chave[indiceChave % tamChave]) - 'a';
             if (isupper(textoCifrado[i])) {
                 textoOriginal[i] = ((textoCifrado[i] - 'A' - chaveAtual + 26) % 26) + 'A';
             } else {
                 textoOriginal[i] = ((textoCifrado[i] - 'a' - chaveAtual + 26) % 26) + 'a';
             }
-            indiceChave++; // Avança a chave apenas aqui
+            indiceChave++; 
         } else {
-            textoOriginal[i] = textoCifrado[i]; // Mantém caracteres inalterados
+            textoOriginal[i] = textoCifrado[i]; 
         }
     }
     textoOriginal[tamTexto] = '\0';
@@ -167,7 +167,7 @@ int main(void) {
     char web_dir[512];
     snprintf(web_dir, sizeof(web_dir), "../frontEnd");
 
-    s_http_server_opts.root_dir = web_dir;  // Usar root_dir ao invés de document_root
+    s_http_server_opts.root_dir = web_dir;  
 
     printf("Servidor rodando em http://127.0.0.1:%s\n", s_http_port);
     printf("Servindo arquivos do diretório: %s\n", web_dir);
