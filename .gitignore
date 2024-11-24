@@ -1,0 +1,14 @@
+V# Ignorar executáveis
+*.exe
+
+# Ignorar pasta node_modules
+node_modules/
+
+# Ignorar arquivos de backup
+*.bak
+
+# Ignorar arquivos compactados com extensão .rar
+*.rar
+
+# Ignorar o arquivo package-lock.json (opcional, dependendo da prática do time)
+package-lock.json

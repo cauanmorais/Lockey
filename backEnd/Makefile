@@ -1,12 +1,12 @@
 CC = gcc
-CFLAGS = -lm -lws2_32 -mconsole  # Usando -mconsole para indicar que é um aplicativo de console
-SOURCES = server.c mongoose.c
-OUTPUT = servidor
+CFLAGS = -lm -lws2_32 -mthreads
+SOURCES = server.c mongoose.c cJSON.c
+OUTPUT = server
 
 # Compila o código e gera o executável
 all:
 	$(CC) $(SOURCES) -o $(OUTPUT) $(CFLAGS)
 
-# Limpa o arquivo gerado
+# Limpa os arquivos gerados
 clean:
 	del $(OUTPUT).exe

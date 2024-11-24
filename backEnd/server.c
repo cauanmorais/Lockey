@@ -1,58 +1,70 @@
-#include "mongoose.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <winsock2.h> 
-#include "cJSON.h" 
+#include <winsock2.h>
+#include "cJSON.h"
+#include "mongoose.h"
 
-#pragma comment(lib, "ws2_32.lib") 
+#pragma comment(lib, "ws2_32.lib")
 #define MAX_TEXT_SIZE 1024
-#define MAX_KEY_SIZE 128 
+#define MAX_KEY_SIZE 128
 
 // Estrutura para manter a chave temporária
 struct session {
     char chave[MAX_KEY_SIZE];
 };
 
+// Configurações do servidor
+static const char *s_http_port = "8080"; // Porta do servidor
+static struct mg_http_serve_opts s_http_server_opts; // Corrigido para mg_http_serve_opts
+
 // Funções de criptografia e descriptografia
-void criptografar(char* textoOriginal, char* chave, char* textoCifrado) {
+void criptografar(char *textoOriginal, char *chave, char *textoCifrado) {
     int tamTexto = strlen(textoOriginal);
     int tamChave = strlen(chave);
+    int indiceChave = 0; // Índice para avançar na chave
 
     for (int i = 0; i < tamTexto; i++) {
-        char chaveAtual = tolower(chave[i % tamChave]) - 'a';
-        if (isupper(textoOriginal[i])) {
-            textoCifrado[i] = ((textoOriginal[i] - 'A' + chaveAtual) % 26) + 'A';
-        } else if (islower(textoOriginal[i])) {
-            textoCifrado[i] = ((textoOriginal[i] - 'a' + chaveAtual) % 26) + 'a';
+        if (isalpha(textoOriginal[i])) { // Apenas caracteres alfabéticos usam a chave
+            char chaveAtual = tolower(chave[indiceChave % tamChave]) - 'a';
+            if (isupper(textoOriginal[i])) {
+                textoCifrado[i] = ((textoOriginal[i] - 'A' + chaveAtual) % 26) + 'A';
+            } else {
+                textoCifrado[i] = ((textoOriginal[i] - 'a' + chaveAtual) % 26) + 'a';
+            }
+            indiceChave++; // Avança a chave apenas aqui
         } else {
-            textoCifrado[i] = textoOriginal[i];
+            textoCifrado[i] = textoOriginal[i]; // Mantém caracteres inalterados
         }
     }
     textoCifrado[tamTexto] = '\0';
 }
 
-void descriptografar(char* textoCifrado, char* chave, char* textoOriginal) {
+void descriptografar(char *textoCifrado, char *chave, char *textoOriginal) {
     int tamTexto = strlen(textoCifrado);
     int tamChave = strlen(chave);
+    int indiceChave = 0; // Índice para avançar na chave
 
     for (int i = 0; i < tamTexto; i++) {
-        char chaveAtual = tolower(chave[i % tamChave]) - 'a';
-        if (isupper(textoCifrado[i])) {
-            textoOriginal[i] = ((textoCifrado[i] - 'A' - chaveAtual + 26) % 26) + 'A';
-        } else if (islower(textoCifrado[i])) {
-            textoOriginal[i] = ((textoCifrado[i] - 'a' - chaveAtual + 26) % 26) + 'a';
+        if (isalpha(textoCifrado[i])) { // Apenas caracteres alfabéticos usam a chave
+            char chaveAtual = tolower(chave[indiceChave % tamChave]) - 'a';
+            if (isupper(textoCifrado[i])) {
+                textoOriginal[i] = ((textoCifrado[i] - 'A' - chaveAtual + 26) % 26) + 'A';
+            } else {
+                textoOriginal[i] = ((textoCifrado[i] - 'a' - chaveAtual + 26) % 26) + 'a';
+            }
+            indiceChave++; // Avança a chave apenas aqui
         } else {
-            textoOriginal[i] = textoCifrado[i];
+            textoOriginal[i] = textoCifrado[i]; // Mantém caracteres inalterados
         }
     }
     textoOriginal[tamTexto] = '\0';
 }
 
-// Manipulador de requisições HTTP
+// Handler para requisições HTTP
 static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (ev == MG_EV_HTTP_MSG) {
-        struct mg_http_message *hm = (struct mg_http_message *) ev_data;
+        struct mg_http_message *hm = (struct mg_http_message *)ev_data;
 
         static struct session s;  // Manter a chave entre requisições
         char texto[MAX_TEXT_SIZE], chave[MAX_KEY_SIZE], resultado[MAX_TEXT_SIZE];
@@ -61,13 +73,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         mg_http_get_var(&hm->body, "key", chave, sizeof(chave));
 
         // Cabeçalhos CORS
-        const char* cors_headers = "Access-Control-Allow-Origin: http://127.0.0.1:5500\r\nAccess-Control-Allow-Methods: GET, POST, OPTIONS\r\nAccess-Control-Allow-Headers: Content-Type\r\n";
+        const char *cors_headers = "Access-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: GET, POST, OPTIONS\r\nAccess-Control-Allow-Headers: Content-Type\r\n";
 
-        // Verificar a URI da requisição
         if (mg_match(hm->uri, mg_str("/api/validate-key"), NULL)) {
-            
             if (chave[0] != '\0') {
-                
                 int chaveValida = 1;
                 for (int i = 0; i < strlen(chave); i++) {
                     if (!isalpha(chave[i])) {
@@ -78,7 +87,6 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
 
                 cJSON *json_response = cJSON_CreateObject();
                 if (chaveValida) {
-                    // Atualizar a chave na sessão
                     strncpy(s.chave, chave, sizeof(s.chave));
                     cJSON_AddBoolToObject(json_response, "valid", 1);
                 } else {
@@ -136,22 +144,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
             mg_http_reply(c, 200, cors_headers, "%s", json_string);
             free(json_string);
             cJSON_Delete(json_response);
-
-        } else if (mg_match(hm->uri, mg_str("/api/choose"), NULL)) {
-            cJSON *json_response = cJSON_CreateObject();
-            cJSON_AddStringToObject(json_response, "message", "Escolha entre criptografar ou descriptografar usando a chave.");
-            cJSON_AddStringToObject(json_response, "chave_atual", s.chave);
-            char *json_string = cJSON_Print(json_response);
-            mg_http_reply(c, 200, cors_headers, "%s", json_string);
-            free(json_string);
-            cJSON_Delete(json_response);
-
         } else {
             mg_http_reply(c, 404, cors_headers, "Not Found\n");
         }
     }
 }
 
+// Função principal
 int main(void) {
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -160,11 +159,24 @@ int main(void) {
     }
 
     struct mg_mgr mgr;
+    struct mg_connection *c;
+
     mg_mgr_init(&mgr);
 
-    mg_http_listen(&mgr, "http://127.0.0.1:8080", fn, NULL);
+    // Configuração do diretório de arquivos estáticos
+    char web_dir[512];
+    snprintf(web_dir, sizeof(web_dir), "../frontEnd");
 
-    printf("Servidor rodando em http://127.0.0.1:8080\n");
+    s_http_server_opts.root_dir = web_dir;  // Usar root_dir ao invés de document_root
+
+    printf("Servidor rodando em http://127.0.0.1:%s\n", s_http_port);
+    printf("Servindo arquivos do diretório: %s\n", web_dir);
+
+    c = mg_http_listen(&mgr, "http://127.0.0.1:8080", fn, NULL);
+    if (c == NULL) {
+        printf("Erro ao inicializar o servidor\n");
+        return 1;
+    }
 
     for (;;) mg_mgr_poll(&mgr, 1000);
 
