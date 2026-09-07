@@ -1,7 +1,7 @@
 
  ## **Descrição:**
 
-O projeto Lockey é uma aplicação web de criptografia e descriptografiação baseada na cifra de Vigenère. O sistema é composto por um backend em C e um frontend em HTML, CSS e JavaScript. O backend utiliza a biblioteca Mongoose para gerenciar requisições HTTP e serve arquivos estáticos do diretório frontend.
+O projeto Lockey é uma aplicação web de criptografia e descriptografia baseado na cifra de Vigenère. O sistema é composto por um backend em C e um frontend em HTML, CSS e JavaScript. O backend utiliza a biblioteca Mongoose para gerenciar requisições HTTP e serve arquivos estáticos do diretório frontend.
 
 ##
 
